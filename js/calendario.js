@@ -203,8 +203,6 @@ export async function mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes }) {
   const porData = Object.fromEntries(registros.map((d) => [d.data, d]));
 
   tela.innerHTML = `
-    ${faixa}
-
     <header class="cabecalho">
       <button type="button" class="seta" id="mes-anterior" aria-label="Mês anterior">‹</button>
       <h1 class="titulo-mes">${formatarMes(ano, mes)}</h1>
@@ -227,6 +225,8 @@ export async function mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes }) {
 
     <h2 class="secao">Semanas</h2>
     ${semanasDoMes().map((segunda) => cartaoSemanal(segunda, porData)).join("")}
+
+    ${faixa}
   `;
 
   const redesenhar = () => mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes });

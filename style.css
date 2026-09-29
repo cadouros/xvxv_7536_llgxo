@@ -527,7 +527,7 @@ h1 {
   display: block;
   width: 100%;
   min-height: var(--toque-min);
-  margin-bottom: 10px;
+  margin-top: 16px;
   padding: 8px 14px;
   border: var(--borda-quadradinho) solid var(--texto);
   border-radius: var(--raio-pilula);
@@ -579,6 +579,33 @@ h1 {
   border-radius: var(--raio-mini);
   background: var(--bege);
 }
+
+/* ---------- PDF ---------- */
+
+.periodo-pdf { margin: 6px 0; }
+.titulo-periodo { flex: 1; text-align: center; font-size: var(--tam-cartao); font-weight: 600; }
+
+.opcoes-pdf {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.opcao-pdf {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--toque-min);
+  font-size: var(--tam-cartao);
+}
+
+.opcao-pdf input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--texto);
+}
+
+.botao:disabled { opacity: 0.4; }
 
 /* ---------- Barra inferior ---------- */
 

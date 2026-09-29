@@ -119,3 +119,18 @@ export function formatarDataComAno(texto) {
   const d = paraDate(texto);
   return `${d.getDate()} ${MESES[d.getMonth()]} ${d.getFullYear()}`;
 }
+
+// Período por extenso para o PDF:
+// "22 a 28 de setembro de 2026", "29 de setembro a 5 de outubro de 2026",
+// "29 de dezembro de 2026 a 4 de janeiro de 2027"
+export function formatarPeriodoLongo(inicio, fim) {
+  const a = paraDate(inicio), b = paraDate(fim);
+  const mesA = MESES_LONGOS[a.getMonth()], mesB = MESES_LONGOS[b.getMonth()];
+  if (a.getFullYear() !== b.getFullYear()) {
+    return `${a.getDate()} de ${mesA} de ${a.getFullYear()} a ${b.getDate()} de ${mesB} de ${b.getFullYear()}`;
+  }
+  if (a.getMonth() !== b.getMonth()) {
+    return `${a.getDate()} de ${mesA} a ${b.getDate()} de ${mesB} de ${b.getFullYear()}`;
+  }
+  return `${a.getDate()} a ${b.getDate()} de ${mesB} de ${b.getFullYear()}`;
+}

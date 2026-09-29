@@ -1,0 +1,71 @@
+/* Todos os valores visuais ficam aqui, em variáveis (ver style.md).
+   Trocar uma cor ou um raio = mudar uma linha. */
+:root {
+  color-scheme: light; /* app sempre claro, mesmo com o iPhone no modo escuro */
+
+  /* Base */
+  --fundo: #FAF6EC;
+  --texto: #000000;
+  --neutro: #8A8A8A;
+  --bege: #E6DEC8;
+
+  /* Estados: cheia e clarinha */
+  --seguiu: #8DB600;   --seguiu-clara: #CEDC8E;
+  --livre: #9C0720;    --livre-clara: #DEAEAF;
+  --descanso: #0197B4; --descanso-clara: #BCDEDE;
+  --sono-ok: #F2C94C;  --sono-ok-clara: #F8E5A5;
+  --fome: #F28C28;     --fome-clara: #F7CC9E;
+  --dor: #6A4FA3;      --dor-clara: #D4CCEB;
+  --vazio-clara: #FAF6EC;
+
+  /* Tipografia */
+  --fonte: ui-rounded, system-ui, sans-serif;
+  --tam-titulo: 20px;
+  --tam-secao: 13px;
+  --tam-cartao: 15px;
+  --tam-detalhe: 12px;
+  --tam-campo: 16px;
+
+  /* Formas */
+  --toque-min: 44px;
+  --raio-cartao: 16px;
+  --raio-dia: 8px;
+  --raio-quadradinho: 2px;
+  --raio-pilula: 999px;
+  --borda-cartao: 1.5px;
+  --borda-dia: 1.5px;
+  --borda-quadradinho: 1px;
+  --borda-hoje: 2.5px;
+  --espaco-cartoes: 8px;
+  --espaco-dias: 4px;
+  --espaco-quadradinhos: 2px;
+  --sombra-barra: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: var(--tam-cartao);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  /* Não deixa o conteúdo ficar sob o entalhe/barra do iPhone */
+  padding: calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);
+}
+
+h1 {
+  font-size: var(--tam-titulo);
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.detalhe {
+  font-size: var(--tam-detalhe);
+  color: var(--neutro);
+}

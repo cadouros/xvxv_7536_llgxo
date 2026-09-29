@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>carolii</title>
+  <meta name="theme-color" content="#FAF6EC">
+  <!-- Faz o iPhone abrir como app, sem a barra do Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="carolii">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Fase 0: página quase vazia, só para testar instalação e modo offline -->
+  <h1>carolii</h1>
+  <p>Esqueleto do app. Se você está vendo isto sem internet, o modo offline funciona.</p>
+  <p class="detalhe">Versão <span id="versao"></span></p>
+
+  <script src="version.js"></script>
+  <script>
+    document.getElementById("versao").textContent = self.APP_VERSION;
+
+    // Registra o service worker (o "guardião" que salva os arquivos para uso offline)
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
+</body>
+</html>

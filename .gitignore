@@ -1,0 +1,14 @@
+# Contexto pessoal: nunca vai para o repositório público
+CLAUDE.md
+style.md
+.claude/
+
+# Dados exportados (backups, PDFs, planilhas)
+*.json
+*.pdf
+*.csv
+
+# Sistema
+.DS_Store
+Thumbs.db
+__pycache__/

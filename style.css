@@ -40,6 +40,9 @@
   --espaco-dias: 4px;
   --espaco-quadradinhos: 2px;
   --sombra-barra: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --altura-barra: 60px;
+  --altura-refeicao: 52px;
+  --raio-mini: 10px; /* botão de qualidade do sono, dentro do cartão */
 }
 
 * { box-sizing: border-box; }
@@ -55,17 +58,271 @@ html, body {
 
 body {
   min-height: 100vh;
-  /* Não deixa o conteúdo ficar sob o entalhe/barra do iPhone */
-  padding: calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 16px);
+  /* Não deixa o conteúdo ficar sob o entalhe nem sob a barra inferior */
+  padding: calc(env(safe-area-inset-top) + 12px) 16px
+           calc(env(safe-area-inset-bottom) + var(--altura-barra) + 40px);
+}
+
+button, input, textarea {
+  font: inherit;
+  color: var(--texto);
+}
+
+button {
+  /* Tira o visual padrão do navegador e o atraso/zoom de toque duplo */
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--fundo);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 h1 {
   font-size: var(--tam-titulo);
   font-weight: 600;
-  margin: 0 0 8px;
+  margin: 0;
+}
+
+.secao {
+  font-size: var(--tam-secao);
+  font-weight: 600;
+  margin: 20px 4px 8px;
 }
 
 .detalhe {
   font-size: var(--tam-detalhe);
-  color: var(--neutro);
+  color: var(--texto);
 }
+
+/* ---------- Cabeçalho com setas ---------- */
+
+.cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.seta {
+  width: var(--toque-min);
+  height: var(--toque-min);
+  border-radius: var(--raio-pilula);
+  font-size: 28px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seta:disabled {
+  color: var(--neutro);
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------- Cartões ---------- */
+
+.cartao {
+  border: var(--borda-cartao) solid var(--texto);
+  border-radius: var(--raio-cartao);
+  background: var(--fundo);
+  font-size: var(--tam-cartao);
+}
+
+.grade2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaco-cartoes);
+  margin-bottom: var(--espaco-cartoes);
+}
+
+.bloco {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-cartoes);
+  margin-bottom: var(--espaco-cartoes);
+}
+
+.espaco-acima { margin-top: 20px; }
+
+/* Cartão de toque */
+.toque {
+  width: 100%;
+  min-height: var(--toque-min);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  text-align: left;
+  border: var(--borda-cartao) solid var(--texto);
+}
+
+.toque .nome { flex: 1; }
+.toque .estado { font-size: var(--tam-detalhe); }
+.toque .icone { font-size: 22px; width: 28px; text-align: center; }
+
+.toque.grande { min-height: var(--altura-refeicao); }
+
+/* Cartões pequenos (dores, resto do dia): nome em cima, estado embaixo */
+.toque.pequeno {
+  min-height: 64px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+}
+.toque.pequeno .nome { flex: none; }
+
+/* Botão de qualidade do sono, dentro do cartão Sono */
+.toque.mini {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: var(--raio-mini);
+  border-width: var(--borda-quadradinho);
+  font-size: var(--tam-detalhe);
+}
+.toque.mini .estado { font-weight: 600; }
+
+/* Cor de fundo conforme o estado (sempre a versão clarinha) */
+[data-cor="vazio"]    { background: var(--vazio-clara); }
+[data-cor="verde"]    { background: var(--seguiu-clara); }
+[data-cor="vermelho"] { background: var(--livre-clara); }
+[data-cor="azul"]     { background: var(--descanso-clara); }
+[data-cor="amarelo"]  { background: var(--sono-ok-clara); }
+[data-cor="laranja"]  { background: var(--fome-clara); }
+[data-cor="lilas"]    { background: var(--dor-clara); }
+[data-cor="bege"]     { background: var(--bege); }
+
+/* Cartões de peso e sono */
+.medida {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.linha-numero {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.linha-numero input {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--toque-min);
+  font-size: 24px; /* no mínimo 16px, senão o iPhone dá zoom */
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  border: none;
+  border-bottom: var(--borda-quadradinho) solid var(--texto);
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  outline: none;
+}
+
+.linha-numero input.invalido {
+  border-bottom: 2px solid var(--livre);
+}
+
+/* Campos de texto (o que comi, horário da fome, nota) */
+.texto {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  font-size: var(--tam-campo);
+  resize: none;
+  outline: none;
+}
+
+.texto[hidden] { display: none; }
+
+/* Banheiro: nome à esquerda, − número + à direita */
+.banheiro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px 6px 14px;
+  margin-bottom: var(--espaco-cartoes);
+}
+
+.contador {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.contador .numero {
+  min-width: 20px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.redondo {
+  width: var(--toque-min);
+  height: var(--toque-min);
+  border: var(--borda-cartao) solid var(--texto);
+  border-radius: var(--raio-pilula);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Barra inferior ---------- */
+
+.barra {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  width: min(300px, calc(100% - 32px));
+  height: var(--altura-barra);
+  padding: 0 14px;
+  border-radius: var(--raio-pilula);
+  background: var(--texto);
+  box-shadow: var(--sombra-barra);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.barra button {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--raio-pilula);
+  background: transparent;
+  color: var(--fundo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.barra button.centro { width: 52px; height: 52px; }
+
+.barra button.ativo {
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+.barra svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.barra .centro svg { width: 28px; height: 28px; }

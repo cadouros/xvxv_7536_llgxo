@@ -52,7 +52,13 @@
       if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
         navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => r.unregister()));
       } else {
-        navigator.serviceWorker.register("sw.js");
+        // "none": sempre confere sw.js e version.js no site, sem usar cópia antiga do navegador
+        navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then((registro) => {
+          // O iPhone deixa o app aberto em segundo plano; ao voltar para ele, procura versão nova
+          document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === "visible") registro.update().catch(() => {});
+          });
+        });
       }
     }
   </script>

@@ -89,7 +89,7 @@ export function graficoPesoAcumulado(semanas, selecionada) {
   const pontos = semanas.map((s, i) => `
     <g class="ponto-semana ${i === selecionada ? "selecionado" : ""}" data-i="${i}">
       <circle class="ponto-grafico" cx="${x(s)}" cy="${y(s.media)}" r="${i === selecionada ? 7 : 5}"/>
-      <circle class="alvo-toque" cx="${x(s)}" cy="${y(s.media)}" r="18"/>
+      <circle class="alvo-toque" cx="${x(s)}" cy="${y(s.media)}" r="22"/>
     </g>`).join("");
 
   // Valor escrito só no ponto selecionado (o resto aparece ao tocar)

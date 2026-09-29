@@ -103,6 +103,35 @@ export function apagarTodosOsDias() {
   return executar(["dias"], "readwrite", (l) => l.dias.clear());
 }
 
+// Troca TODOS os dias pelos de um backup. Tudo numa operação só:
+// se algo der errado no meio, nada muda (os dados antigos continuam).
+export function substituirTodosOsDias(dias) {
+  return executar(["dias"], "readwrite", (l) => {
+    l.dias.clear();
+    for (const dia of dias) l.dias.put(limpar(dia));
+  });
+}
+
+// Converte dias de um formato antigo ("versao") para o atual
+export function migrarDias(dias, versao) {
+  for (let v = versao; v < SCHEMA_VERSION; v++) {
+    dias = dias.map(MIGRACOES[v]);
+  }
+  return dias;
+}
+
+// Pede ao iPhone para não apagar os dados do app quando faltar espaço.
+// Devolve true se o armazenamento é persistente.
+export async function pedirArmazenamentoPersistente() {
+  if (!navigator.storage || !navigator.storage.persist) return false;
+  try {
+    if (await navigator.storage.persisted()) return true;
+    return await navigator.storage.persist();
+  } catch {
+    return false;
+  }
+}
+
 // --- início ---
 
 // Abre o banco e, se os dados estiverem num formato antigo, converte.
@@ -117,10 +146,7 @@ export async function iniciarDados() {
     throw new Error("Os dados são de uma versão mais nova do app. Feche e abra de novo.");
   }
   if (versao < SCHEMA_VERSION) {
-    let dias = await todosOsDias();
-    for (let v = versao; v < SCHEMA_VERSION; v++) {
-      dias = dias.map(MIGRACOES[v]);
-    }
+    const dias = migrarDias(await todosOsDias(), versao);
     // Grava os dias convertidos e a versão nova juntos: ou tudo, ou nada
     await executar(["dias", "meta"], "readwrite", (l) => {
       for (const dia of dias) l.dias.put(dia);

@@ -521,6 +521,65 @@ h1 {
 
 .alvo-toque { fill: transparent; cursor: pointer; }
 
+/* ---------- Backup e Ajustes ---------- */
+
+.faixa-backup {
+  display: block;
+  width: 100%;
+  min-height: var(--toque-min);
+  margin-bottom: 10px;
+  padding: 8px 14px;
+  border: var(--borda-quadradinho) solid var(--texto);
+  border-radius: var(--raio-pilula);
+  background: var(--fundo);
+  color: var(--texto);
+  font-size: var(--tam-secao);
+  text-align: center;
+}
+
+.faixa-backup.destaque {
+  border-width: var(--borda-cartao);
+  background: var(--livre-clara);
+  font-weight: 600;
+}
+
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-cartoes);
+  margin-top: 10px;
+}
+
+.botao {
+  flex: 1;
+  min-height: var(--toque-min);
+  padding: 8px 14px;
+  border: var(--borda-cartao) solid var(--texto);
+  border-radius: var(--raio-pilula);
+  background: var(--fundo);
+  color: var(--texto);
+  font-size: var(--tam-cartao);
+  white-space: nowrap;
+}
+
+.botao.principal {
+  background: var(--texto);
+  color: var(--fundo);
+}
+
+.botao.perigo {
+  background: var(--livre-clara);
+  font-weight: 600;
+}
+
+.aviso-importacao {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: var(--borda-quadradinho) solid var(--texto);
+  border-radius: var(--raio-mini);
+  background: var(--bege);
+}
+
 /* ---------- Barra inferior ---------- */
 
 .barra {

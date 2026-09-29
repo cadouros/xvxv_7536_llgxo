@@ -107,3 +107,15 @@ export function diasEntre(inicio, fim) {
 export function plural(n, singular, pluralTexto) {
   return `${n} ${n === 1 ? singular : pluralTexto}`;
 }
+
+// Data e hora local agora, como texto: "2026-09-29T14:03"
+export function agoraLocal() {
+  const d = new Date();
+  return `${paraTexto(d)}T${doisDigitos(d.getHours())}:${doisDigitos(d.getMinutes())}`;
+}
+
+// "2026-09-29" -> "29 set 2026"
+export function formatarDataComAno(texto) {
+  const d = paraDate(texto);
+  return `${d.getDate()} ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+}

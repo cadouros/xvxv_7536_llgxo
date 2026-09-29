@@ -9,6 +9,7 @@ import {
 } from "./formato.js";
 import { datasAteHoje, resumirRefeicoes, mediaDoCampo, contarDias, listarLivres } from "./relatorios.js";
 import { graficoPesoSemana, graficoSonoSemana } from "./graficos.js";
+import { faixaBackup } from "./ajustes.js";
 
 const CAMADAS = [
   { id: "refeicoes", nome: "Refeições" },
@@ -197,10 +198,13 @@ export async function mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes }) {
   const inicio = inicioDaSemana(montarData(ano, mes, 1));
   const fim = somarDias(inicioDaSemana(montarData(ano, mes, diasNoMes)), 6);
   const registros = await lerDiasEntre(inicio, fim);
+  const faixa = await faixaBackup();
   if (minhaAbertura !== aberturaAtual) return;
   const porData = Object.fromEntries(registros.map((d) => [d.data, d]));
 
   tela.innerHTML = `
+    ${faixa}
+
     <header class="cabecalho">
       <button type="button" class="seta" id="mes-anterior" aria-label="Mês anterior">‹</button>
       <h1 class="titulo-mes">${formatarMes(ano, mes)}</h1>
@@ -244,4 +248,5 @@ export async function mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes }) {
     b.onclick = () => aoAbrirDia(b.dataset.data);
   });
   tela.querySelector("#abrir-ajustes").onclick = aoAbrirAjustes;
+  tela.querySelector("#faixa-backup").onclick = aoAbrirAjustes;
 }

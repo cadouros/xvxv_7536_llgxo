@@ -1,24 +1,13 @@
 // Ponto de partida do app: abre o banco de dados e cuida da navegação entre telas.
 
-import { iniciarDados } from "./dados.js";
+import { iniciarDados, pedirArmazenamentoPersistente } from "./dados.js";
 import { mostrarHoje } from "./hoje.js";
 import { mostrarCalendario } from "./calendario.js";
 import { mostrarPeso } from "./peso.js";
+import { mostrarAjustes } from "./ajustes.js";
 
 const tela = document.getElementById("tela");
 const barra = document.getElementById("barra");
-
-function mostrarAjustes() {
-  tela.innerHTML = `
-    <header class="cabecalho">
-      <button type="button" class="seta" id="voltar" aria-label="Voltar">‹</button>
-      <h1>Ajustes</h1>
-      <span class="seta"></span>
-    </header>
-    <p class="detalhe">Backup, CSV e PDF chegam nas próximas fases.</p>
-    <p class="detalhe">Versão ${self.APP_VERSION}</p>`;
-  tela.querySelector("#voltar").onclick = () => irPara("calendario");
-}
 
 // Troca de tela. "data" só é usada pela tela Hoje (sem data = hoje).
 function irPara(nome, data) {
@@ -28,7 +17,7 @@ function irPara(nome, data) {
   });
   if (nome === "hoje") mostrarHoje(tela, data);
   else if (nome === "peso") mostrarPeso(tela);
-  else if (nome === "ajustes") mostrarAjustes();
+  else if (nome === "ajustes") mostrarAjustes(tela, { aoVoltar: () => irPara("calendario") });
   else mostrarCalendario(tela, {
     aoAbrirDia: (dataEscolhida) => irPara("hoje", dataEscolhida),
     aoAbrirAjustes: () => irPara("ajustes"),
@@ -38,6 +27,9 @@ function irPara(nome, data) {
 barra.querySelectorAll("button").forEach((b) => {
   b.onclick = () => irPara(b.dataset.tela);
 });
+
+// Pede ao iPhone para não apagar os dados quando faltar espaço
+pedirArmazenamentoPersistente();
 
 iniciarDados()
   .then(() => irPara("calendario")) // o app abre no Calendário

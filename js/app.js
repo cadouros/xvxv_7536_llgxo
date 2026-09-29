@@ -2,20 +2,10 @@
 
 import { iniciarDados } from "./dados.js";
 import { mostrarHoje } from "./hoje.js";
+import { mostrarCalendario } from "./calendario.js";
 
 const tela = document.getElementById("tela");
 const barra = document.getElementById("barra");
-
-function mostrarCalendario() {
-  // Provisório: o calendário chega na fase 2
-  tela.innerHTML = `
-    <header class="cabecalho">
-      <h1>Calendário</h1>
-      <button type="button" class="seta" id="abrir-ajustes" aria-label="Ajustes">⚙︎</button>
-    </header>
-    <p class="detalhe">O calendário chega na fase 2. Por enquanto, use a tela Hoje e as setas para mudar de dia.</p>`;
-  tela.querySelector("#abrir-ajustes").onclick = () => irPara("ajustes");
-}
 
 function mostrarPeso() {
   // Provisório: a aba Peso chega na fase 3
@@ -45,7 +35,10 @@ function irPara(nome, data) {
   if (nome === "hoje") mostrarHoje(tela, data);
   else if (nome === "peso") mostrarPeso();
   else if (nome === "ajustes") mostrarAjustes();
-  else mostrarCalendario();
+  else mostrarCalendario(tela, {
+    aoAbrirDia: (dataEscolhida) => irPara("hoje", dataEscolhida),
+    aoAbrirAjustes: () => irPara("ajustes"),
+  });
 }
 
 barra.querySelectorAll("button").forEach((b) => {

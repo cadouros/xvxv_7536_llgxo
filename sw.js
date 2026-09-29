@@ -21,6 +21,7 @@ const ARQUIVOS = [
   "style.css",
   "version.js",
   "js/app.js",
+  "js/calendario.js",
   "js/dados.js",
   "js/formato.js",
   "js/hoje.js",

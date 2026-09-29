@@ -83,6 +83,11 @@ export function salvarDia(dia) {
   return executar(["dias"], "readwrite", (l) => l.dias.put(limpo));
 }
 
+// Todos os dias entre duas datas (incluindo as duas), em ordem
+export function lerDiasEntre(inicio, fim) {
+  return executar(["dias"], "readonly", (l) => l.dias.getAll(IDBKeyRange.bound(inicio, fim)));
+}
+
 export function todosOsDias() {
   return executar(["dias"], "readonly", (l) => l.dias.getAll());
 }

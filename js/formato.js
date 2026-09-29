@@ -6,6 +6,8 @@
 
 const DIAS_SEMANA = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
 const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+const MESES_LONGOS = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho",
+  "agosto", "setembro", "outubro", "novembro", "dezembro"];
 
 function doisDigitos(n) {
   return String(n).padStart(2, "0");
@@ -20,6 +22,16 @@ function paraTexto(d) {
 function paraDate(texto) {
   const [a, m, d] = texto.split("-").map(Number);
   return new Date(a, m - 1, d, 12);
+}
+
+// (2026, 9, 5) -> "2026-09-05". Mês de 1 a 12.
+export function montarData(ano, mes, dia) {
+  return `${ano}-${doisDigitos(mes)}-${doisDigitos(dia)}`;
+}
+
+// (2026, 9) -> "setembro 2026"
+export function formatarMes(ano, mes) {
+  return `${MESES_LONGOS[mes - 1]} ${ano}`;
 }
 
 export function hojeISO() {

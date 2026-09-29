@@ -43,6 +43,12 @@
   --altura-barra: 60px;
   --altura-refeicao: 52px;
   --raio-mini: 10px; /* botão de qualidade do sono, dentro do cartão */
+  --altura-dia: 50px;
+  --quadradinho: 9px;
+  --sono-largura: 32px;
+  --sono-altura: 20px;
+  --raio-sono: 4px;
+  --altura-camada: 40px;
 }
 
 * { box-sizing: border-box; }
@@ -276,6 +282,121 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ---------- Calendário ---------- */
+
+.titulo-mes { flex: 1; text-align: center; }
+.engrenagem { font-size: 22px; }
+
+/* Botões de camada: cores definidas explicitamente para o navegador não mudar nada */
+.camadas {
+  display: flex;
+  gap: var(--espaco-cartoes);
+  margin-bottom: 14px;
+}
+
+.camada {
+  flex: 1;
+  min-height: var(--altura-camada);
+  border: var(--borda-cartao) solid var(--texto);
+  border-radius: var(--raio-pilula);
+  background: var(--fundo);
+  color: var(--texto);
+  font-size: var(--tam-cartao);
+}
+
+.camada.ativa {
+  background: var(--texto);
+  color: var(--fundo);
+}
+
+.semana, .mes {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--espaco-dias);
+}
+
+.semana {
+  font-size: 11px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* Bloco do dia */
+.dia {
+  min-width: 0;
+  height: var(--altura-dia);
+  border: var(--borda-dia) solid var(--texto);
+  border-radius: var(--raio-dia);
+  background: var(--fundo);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-quadradinhos);
+  padding-top: 3px;
+}
+
+.dia .num {
+  font-size: 11px;
+  line-height: 14px;
+  margin-bottom: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dia.hoje { border-width: var(--borda-hoje); padding-top: 2px; }
+.dia.hoje .num { font-weight: 700; }
+
+.dia.futuro {
+  border-style: dashed;
+  border-color: var(--neutro);
+  color: var(--neutro);
+}
+
+.linha-q {
+  display: flex;
+  gap: var(--espaco-quadradinhos);
+}
+
+.quadradinho {
+  display: inline-block;
+  width: var(--quadradinho);
+  height: var(--quadradinho);
+  border: var(--borda-quadradinho) solid var(--texto);
+  border-radius: var(--raio-quadradinho);
+  flex: none;
+}
+
+.sono-ret {
+  width: var(--sono-largura);
+  height: var(--sono-altura);
+  border: var(--borda-quadradinho) solid var(--texto);
+  border-radius: var(--raio-sono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Legenda embaixo do calendário */
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 14px;
+  font-size: var(--tam-detalhe);
+}
+
+.legenda .item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legenda .quadradinho {
+  width: 12px;
+  height: 12px;
 }
 
 /* ---------- Barra inferior ---------- */

@@ -3,16 +3,10 @@
 import { iniciarDados } from "./dados.js";
 import { mostrarHoje } from "./hoje.js";
 import { mostrarCalendario } from "./calendario.js";
+import { mostrarPeso } from "./peso.js";
 
 const tela = document.getElementById("tela");
 const barra = document.getElementById("barra");
-
-function mostrarPeso() {
-  // Provisório: a aba Peso chega na fase 3
-  tela.innerHTML = `
-    <header class="cabecalho"><h1>Peso</h1></header>
-    <p class="detalhe">O gráfico de peso chega na fase 3.</p>`;
-}
 
 function mostrarAjustes() {
   tela.innerHTML = `
@@ -33,7 +27,7 @@ function irPara(nome, data) {
     b.classList.toggle("ativo", b.dataset.tela === nome || (nome === "ajustes" && b.dataset.tela === "calendario"));
   });
   if (nome === "hoje") mostrarHoje(tela, data);
-  else if (nome === "peso") mostrarPeso();
+  else if (nome === "peso") mostrarPeso(tela);
   else if (nome === "ajustes") mostrarAjustes();
   else mostrarCalendario(tela, {
     aoAbrirDia: (dataEscolhida) => irPara("hoje", dataEscolhida),

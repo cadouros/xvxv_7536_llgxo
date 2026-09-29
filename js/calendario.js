@@ -3,7 +3,12 @@
 
 import { REFEICOES, HABITOS, infoValor } from "./modelo.js";
 import { lerDiasEntre } from "./dados.js";
-import { hojeISO, montarData, formatarMes, formatarCabecalho, formatarNumero } from "./formato.js";
+import {
+  hojeISO, montarData, formatarMes, formatarCabecalho, formatarNumero, formatarSemana,
+  formatarDiaCurto, diaSemanaCurto, inicioDaSemana, somarDias, plural,
+} from "./formato.js";
+import { datasAteHoje, resumirRefeicoes, mediaDoCampo, contarDias, listarLivres } from "./relatorios.js";
+import { graficoPesoSemana, graficoSonoSemana } from "./graficos.js";
 
 const CAMADAS = [
   { id: "refeicoes", nome: "Refeições" },
@@ -92,11 +97,106 @@ function montarLegenda() {
     <p class="detalhe">${posicao}</p>`;
 }
 
+// ---------- Relatórios ----------
+
+// Protege textos digitados antes de colocá-los no HTML
+function escapar(texto) {
+  return texto.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+}
+
+function linhaRefeicoes(r) {
+  return `Segui ${r.seguiu} · Livres ${r.livre} · Sem marcar ${r.semMarcar}`;
+}
+
+function linhaPeso(p) {
+  if (p.n === 0) return "Peso: nenhuma pesagem";
+  return `Peso médio: <strong>${formatarNumero(p.media)} kg</strong> (${plural(p.n, "pesagem", "pesagens")})`;
+}
+
+function resumoMensal(porData) {
+  const datas = datasAteHoje(montarData(ano, mes, 1), montarData(ano, mes, new Date(ano, mes, 0).getDate()));
+  if (datas.length === 0) {
+    return `<section class="cartao relatorio"><h2>Resumo do mês</h2><p>Este mês ainda não começou.</p></section>`;
+  }
+  const treino = contarDias(porData, datas, "treino", "treinei");
+  const sono = mediaDoCampo(porData, datas, "sono_horas");
+  return `
+    <section class="cartao relatorio">
+      <h2>Resumo do mês</h2>
+      <p>${linhaPeso(mediaDoCampo(porData, datas, "peso"))}</p>
+      <p>Refeições: ${linhaRefeicoes(resumirRefeicoes(porData, datas))}</p>
+      <p>Treino: treinei ${treino.comValor} de ${plural(treino.marcados, "dia marcado", "dias marcados")}</p>
+      <p>Sono médio: ${sono.n ? `${formatarNumero(sono.media)} h (${plural(sono.n, "noite", "noites")})` : "nenhuma noite marcada"}</p>
+    </section>`;
+}
+
+function cartaoSemanal(segunda, porData) {
+  const seteDias = Array.from({ length: 7 }, (_, i) => somarDias(segunda, i));
+  const datas = datasAteHoje(segunda, seteDias[6]); // só até hoje
+  const registros = seteDias.map((d) => porData[d] || {});
+  const dorM = contarDias(porData, datas, "dor_muscular", "sim");
+  const dorA = contarDias(porData, datas, "dor_articular", "sim");
+  const livres = listarLivres(porData, datas);
+
+  // Debaixo de cada dia: o nome do dia e um 💩 por vez que foi ao banheiro
+  const colunasDias = (comBanheiro) => `
+    <div class="dias7">
+      ${seteDias.map((d, i) => `
+        <span>
+          <span class="dia-curto">${diaSemanaCurto(d)}</span>
+          ${comBanheiro ? `<span class="cocos">${"<span>💩</span>".repeat(registros[i].banheiro || 0)}</span>` : ""}
+        </span>`).join("")}
+    </div>`;
+
+  return `
+    <section class="cartao relatorio semana-cartao">
+      <h2>${formatarSemana(segunda)}</h2>
+      <p>Refeições: ${linhaRefeicoes(resumirRefeicoes(porData, datas))}</p>
+      <p>${linhaPeso(mediaDoCampo(porData, datas, "peso"))}</p>
+      ${graficoPesoSemana(registros.map((r) => r.peso))}
+      ${colunasDias(true)}
+      <h3>Sono</h3>
+      ${graficoSonoSemana(registros)}
+      ${colunasDias(false)}
+      <div class="legenda pequena">
+        <span class="item"><span class="quadradinho cheio" data-cor="verde"></span>boa</span>
+        <span class="item"><span class="quadradinho cheio" data-cor="amarelo"></span>ok</span>
+        <span class="item"><span class="quadradinho cheio" data-cor="vermelho"></span>ruim</span>
+        <span class="item"><span class="quadradinho cheio" data-cor="vazio"></span>qualidade sem marcar</span>
+      </div>
+      <p>Dor muscular: ${dorM.comValor} de ${plural(dorM.marcados, "dia marcado", "dias marcados")}</p>
+      <p>Dor articular: ${dorA.comValor} de ${plural(dorA.marcados, "dia marcado", "dias marcados")}</p>
+      ${livres.length === 0 ? "<p>Nenhuma refeição livre.</p>" : `
+        <details class="livres">
+          <summary>O que comi nas refeições livres (${livres.length})</summary>
+          <ul>
+            ${livres.map((l) => `
+              <li><span class="quando">${formatarDiaCurto(l.data)} · ${l.refeicao}</span>
+                ${l.texto ? escapar(l.texto) : "<em>sem descrição</em>"}</li>`).join("")}
+          </ul>
+        </details>`}
+    </section>`;
+}
+
+// Semanas (segundas-feiras) que tocam o mês aberto e já começaram
+function semanasDoMes() {
+  const hoje = hojeISO();
+  const ultimoDia = montarData(ano, mes, new Date(ano, mes, 0).getDate());
+  const semanas = [];
+  for (let s = inicioDaSemana(montarData(ano, mes, 1)); s <= ultimoDia && s <= hoje; s = somarDias(s, 7)) {
+    semanas.push(s);
+  }
+  return semanas;
+}
+
 // aoAbrirDia(data) e aoAbrirAjustes() vêm do app.js, que cuida da troca de telas
 export async function mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes }) {
   const minhaAbertura = ++aberturaAtual;
+  // Lê semanas inteiras: a semana que atravessa dois meses aparece completa nos dois
   const diasNoMes = new Date(ano, mes, 0).getDate();
-  const registros = await lerDiasEntre(montarData(ano, mes, 1), montarData(ano, mes, diasNoMes));
+  const inicio = inicioDaSemana(montarData(ano, mes, 1));
+  const fim = somarDias(inicioDaSemana(montarData(ano, mes, diasNoMes)), 6);
+  const registros = await lerDiasEntre(inicio, fim);
   if (minhaAbertura !== aberturaAtual) return;
   const porData = Object.fromEntries(registros.map((d) => [d.data, d]));
 
@@ -108,6 +208,8 @@ export async function mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes }) {
       <button type="button" class="seta engrenagem" id="abrir-ajustes" aria-label="Ajustes">⚙︎</button>
     </header>
 
+    ${resumoMensal(porData)}
+
     <div class="camadas">
       ${CAMADAS.map((c) => `
         <button type="button" class="camada ${c.id === camada ? "ativa" : ""}" data-camada="${c.id}"
@@ -118,6 +220,9 @@ export async function mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes }) {
     <div class="mes">${montarGrade(porData)}</div>
 
     ${montarLegenda()}
+
+    <h2 class="secao">Semanas</h2>
+    ${semanasDoMes().map((segunda) => cartaoSemanal(segunda, porData)).join("")}
   `;
 
   const redesenhar = () => mostrarCalendario(tela, { aoAbrirDia, aoAbrirAjustes });

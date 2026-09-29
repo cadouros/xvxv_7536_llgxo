@@ -399,6 +399,128 @@ h1 {
   height: 12px;
 }
 
+/* ---------- Relatórios ---------- */
+
+.relatorio {
+  padding: 12px 14px;
+  margin-bottom: var(--espaco-cartoes);
+  font-size: var(--tam-secao);
+}
+
+.relatorio h2 {
+  font-size: var(--tam-cartao);
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.relatorio h3 {
+  font-size: var(--tam-secao);
+  font-weight: 600;
+  margin: 12px 0 2px;
+}
+
+.relatorio p { margin: 4px 0; }
+
+.relatorio strong { font-variant-numeric: tabular-nums; }
+
+/* Gráficos: preto, linhas finas, quase sem grade */
+.grafico {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 8px;
+}
+
+.linha-grafico {
+  fill: none;
+  stroke: var(--texto);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.ponto-grafico {
+  fill: var(--texto);
+  stroke: var(--fundo);
+  stroke-width: 2;
+}
+
+.eixo-grafico {
+  stroke: var(--texto);
+  stroke-width: 1;
+}
+
+.rotulo-grafico {
+  font-family: var(--fonte);
+  font-size: 11px;
+  fill: var(--texto);
+  font-variant-numeric: tabular-nums;
+}
+
+.rotulo-grafico.destaque { font-size: 13px; font-weight: 600; }
+
+/* Cor cheia (barras e amostras da legenda) */
+.cheia[data-cor="verde"]    { fill: var(--seguiu); }
+.cheia[data-cor="amarelo"]  { fill: var(--sono-ok); }
+.cheia[data-cor="vermelho"] { fill: var(--livre); }
+.cheia[data-cor="vazio"]    { fill: var(--fundo); stroke: var(--texto); stroke-width: 1; }
+
+.quadradinho.cheio[data-cor="verde"]    { background: var(--seguiu); }
+.quadradinho.cheio[data-cor="amarelo"]  { background: var(--sono-ok); }
+.quadradinho.cheio[data-cor="vermelho"] { background: var(--livre); }
+
+.legenda.pequena { margin-top: 6px; font-size: 11px; }
+.legenda.pequena .quadradinho { width: 10px; height: 10px; }
+
+/* Nomes dos dias e 💩 empilhados, alinhados com as 7 colunas do gráfico */
+.dias7 {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 11px;
+}
+
+.dias7 > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Um 💩 embaixo do outro */
+.cocos {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  line-height: 13px;
+  margin-top: 2px;
+}
+
+.livres { margin-top: 8px; }
+
+.livres summary {
+  min-height: var(--toque-min);
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.livres ul { margin: 0; padding-left: 18px; }
+.livres li { margin-bottom: 6px; }
+.livres .quando { display: block; font-size: 11px; }
+
+/* Aba Peso: o gráfico rola para os lados quando o histórico cresce */
+.rolagem-grafico {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 0;
+  margin: 12px 0 var(--espaco-cartoes);
+}
+
+.grafico-acumulado { display: block; }
+
+.alvo-toque { fill: transparent; cursor: pointer; }
+
 /* ---------- Barra inferior ---------- */
 
 .barra {

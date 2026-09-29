@@ -65,3 +65,45 @@ export function lerNumero(texto, minimo, maximo) {
 export function formatarNumero(n, casasMinimas = 1) {
   return n.toLocaleString("pt-BR", { minimumFractionDigits: casasMinimas, maximumFractionDigits: 1 });
 }
+
+// Segunda-feira da semana de uma data (a semana vai de segunda a domingo)
+export function inicioDaSemana(texto) {
+  const d = paraDate(texto);
+  return somarDias(texto, -((d.getDay() + 6) % 7));
+}
+
+// "2026-10-06" (segunda) -> "6–12 out"; atravessando meses: "29 set–5 out"
+export function formatarSemana(segunda) {
+  const ini = paraDate(segunda);
+  const fim = paraDate(somarDias(segunda, 6));
+  if (ini.getMonth() === fim.getMonth()) {
+    return `${ini.getDate()}–${fim.getDate()} ${MESES[fim.getMonth()]}`;
+  }
+  return `${ini.getDate()} ${MESES[ini.getMonth()]}–${fim.getDate()} ${MESES[fim.getMonth()]}`;
+}
+
+// "2026-09-29" -> "ter"
+export function diaSemanaCurto(texto) {
+  return DIAS_SEMANA[paraDate(texto).getDay()].slice(0, 3);
+}
+
+// "2026-09-29" -> "ter, 29 set"
+export function formatarDiaCurto(texto) {
+  const d = paraDate(texto);
+  return `${diaSemanaCurto(texto)}, ${d.getDate()} ${MESES[d.getMonth()]}`;
+}
+
+// "2026-09-29" -> "set"
+export function mesCurto(texto) {
+  return MESES[paraDate(texto).getMonth()];
+}
+
+// Diferença em dias entre duas datas (fim - inicio)
+export function diasEntre(inicio, fim) {
+  return Math.round((paraDate(fim) - paraDate(inicio)) / 86400000);
+}
+
+// (1, "pesagem", "pesagens") -> "1 pesagem"; (3, ...) -> "3 pesagens"
+export function plural(n, singular, pluralTexto) {
+  return `${n} ${n === 1 ? singular : pluralTexto}`;
+}

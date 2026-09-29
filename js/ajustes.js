@@ -102,6 +102,16 @@ function ligarPdf(secao) {
   atualizar();
 }
 
+// A versão vem do nome da cópia offline ("carolii-v0.8"), criada pelo sw.js
+async function versaoInstalada() {
+  try {
+    const nome = (await caches.keys()).filter((n) => n.startsWith("carolii-")).sort().pop();
+    return nome ? nome.slice("carolii-".length) : "sem cópia offline (modo de teste)";
+  } catch {
+    return "desconhecida";
+  }
+}
+
 // "2026-09-29T14:03" -> "29 set 2026, às 14:03 (hoje)"
 function descreverMomento(momento) {
   const [data, hora] = momento.split("T");
@@ -179,7 +189,7 @@ export async function mostrarAjustes(tela, { aoVoltar }) {
       <p>Armazenamento: ${persistente
         ? "protegido (o iPhone não apaga sozinho)"
         : "não protegido (o iPhone pode apagar se faltar espaço; faça backup)"}</p>
-      <p>Versão ${self.APP_VERSION}</p>
+      <p>Versão ${await versaoInstalada()}</p>
     </section>
   `;
 
